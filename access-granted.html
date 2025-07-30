@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Access Granted</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Outfit', sans-serif;
+      background: #000;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 1.1em;
+    }
+
+    @media (max-width: 600px) {
+      h2 {
+        font-size: 1.8em;
+      }
+      p {
+        font-size: 1.3em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>Access Granted</h2>
+  <p>Redirecting to your stream content...</p>
+
+  <script>
+    const expiresAt = Date.now() + (24 * 60 * 60 * 1000);
+    localStorage.setItem('verifiedUntil', expiresAt);
+
+    // Set persistent cookie with explicit expiration date
+    const expireDate = new Date(expiresAt).toUTCString();
+    document.cookie = "verified_access=true; expires=" + expireDate + "; path=/";
+
+    const params = new URLSearchParams(window.location.search);
+    const rawUrl = params.get('url') || '';
+    const title = params.get('title');
+
+    let target = `/stream.html?url=${encodeURIComponent(rawUrl)}`;
+    if (title) {
+      target += `&title=${encodeURIComponent(title)}`;
+    }
+
+    setTimeout(() => {
+      window.location.href = target;
+    }, 2000);
+  </script>
+</body>
+</html>
